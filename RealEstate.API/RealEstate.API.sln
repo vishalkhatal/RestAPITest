@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.API", "RealEstate.API\RealEstate.API.csproj", "{6DFFA8F1-D425-469A-A0E0-13206A49BAA4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6DFFA8F1-D425-469A-A0E0-13206A49BAA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DFFA8F1-D425-469A-A0E0-13206A49BAA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DFFA8F1-D425-469A-A0E0-13206A49BAA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DFFA8F1-D425-469A-A0E0-13206A49BAA4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
