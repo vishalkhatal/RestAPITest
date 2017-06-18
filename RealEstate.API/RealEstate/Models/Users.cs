@@ -32,6 +32,7 @@ namespace RealEstate.Models
     }
     public class ProfilePhoto
     {
+        public string ProfilePhotoId { get; set; }
         public string FileName { get; set; }
         public string FileType { get; set; }
         public byte[] Photo { get; set; }

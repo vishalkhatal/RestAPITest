@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RealEstate.Models
 {
@@ -34,7 +35,38 @@ namespace RealEstate.Models
 
     public class RegisterBindingModel
     {
+        [NotMapped]
+        public string FirstName { get; set; }
+
+        [NotMapped]
+        public string LastName { get; set; }
+
+        [NotMapped]
+        public string MobNo { get; set; }
+
         [Required]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Role")]
+        public UserType UserType { get; set; }
+      
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+    }
+    public class ResetPasswordViewModel
+    {
+        [Required]
+        [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
@@ -48,6 +80,8 @@ namespace RealEstate.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string Code { get; set; }
     }
 
     public class RegisterExternalBindingModel
