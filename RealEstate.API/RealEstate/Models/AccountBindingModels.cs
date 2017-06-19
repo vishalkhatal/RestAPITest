@@ -35,7 +35,7 @@ namespace RealEstate.Models
 
     public class RegisterBindingModel
     {
-        [NotMapped]
+        [Required]
         public string FirstName { get; set; }
 
         [NotMapped]
@@ -51,7 +51,7 @@ namespace RealEstate.Models
         [Required]
         [Display(Name = "Role")]
         public UserType UserType { get; set; }
-      
+
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]

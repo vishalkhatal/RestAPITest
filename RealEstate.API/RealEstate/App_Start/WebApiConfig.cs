@@ -22,7 +22,7 @@ namespace RealEstate
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "api/v1/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }

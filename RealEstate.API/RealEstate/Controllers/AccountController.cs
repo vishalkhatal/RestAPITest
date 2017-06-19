@@ -22,9 +22,9 @@ using System.Linq;
 namespace RealEstate.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
+        #region Authorization
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
         RealEstateContext db = new RealEstateContext();
@@ -52,170 +52,12 @@ namespace RealEstate.Controllers
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+        #endregion
 
         #region Used methods
-
-        // GET: api/Account/GetAllUsersList
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [HttpGet]
-        public IHttpActionResult GetAllUsersList()
-        {
-            try
-            {
-                ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
-                var userDetails = db.Users.Where(x => x.UserId == user.Id).Select(y => y).FirstOrDefault();
-                if (userDetails.UserType == UserType.BuilderAdmin)
-                {
-                    var allusersList = db.Users.ToList();
-                    return Ok(allusersList);
-
-                }
-                else
-                {
-                    return Unauthorized();
-
-                }
-            }
-            catch (Exception e)
-            {
-                return BadRequest();
-            }
-        }
-
-        // GET: api/Account/GetUserDetail/5
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [HttpGet]
-        public HttpResponseMessage GetUserDetail()
-        {
-            try
-            {
-                ApplicationUser user = UserManager.FindById(User.Identity.GetUserId());
-                var userDetails = db.Users.Where(x => x.UserId == user.Id).Select(y => y).FirstOrDefault();
-                return Request.CreateResponse(HttpStatusCode.OK, userDetails);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
-            }
-        }
-
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [HttpGet]
-        public HttpResponseMessage GetUserInfo(string id)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(id))
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest);
-                }
-                var userDetails = db.Users.Where(x => x.UserId == id).Select(y => y).FirstOrDefault();
-                return Request.CreateResponse(HttpStatusCode.OK, userDetails);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
-            }
-        }
-
-        // GET: api/Account/GetUserNotification/5
-        //public HttpResponseMessage GetUserNotification(string id)
-        //{
-        //    ResponseWithObject response = new ResponseWithObject();
-        //    try
-        //    {
-        //        ApplicationUser userDetail = UserManager.FindById(User.Identity.GetUserId());
-        //        List<string> notifications = new List<string>();
-        //        if (userDetail != null)
-        //        {
-        //            if (userDetail.User.Subscription == Subscription.Guest)
-        //            {
-        //                TimeSpan difference = DateTime.Today - userDetail.User.CreatedAt; //create TimeSpan object
-
-        //                int days = (int)Math.Ceiling(difference.TotalDays); //Extract days, counting parts of a day as a full day (rounding up).
-        //                if (days < 30)
-        //                {
-        //                    notifications.Add(string.Format("Last {0} days are remaining in your subscriptions.Hurry up !! ", days));
-
-        //                }
-        //            }
-        //            else
-        //            {
-        //                notifications.Add("No new notifications !!! ");
-        //            }
-
-        //        }
-
-        //        response.IsSuccess = true;
-        //        response.Response = notifications;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.BadRequest, e);
-        //    }
-        //    return Request.CreateResponse(HttpStatusCode.OK, response.Response);
-        //}
-
-
-        // POST: api/Users
-
-        public HttpResponseMessage EditUserProfile(User user)
-        {
-            try
-            {
-                ApplicationUser userDetail = UserManager.FindById(User.Identity.GetUserId());
-                var userDataInDB = db.Users.Where(x => x.UserId == userDetail.Id).FirstOrDefault();
-                userDataInDB.FirstName = user.FirstName;
-                userDataInDB.MiddleName = user.MiddleName;
-                userDataInDB.LastName = user.LastName;
-                userDataInDB.Address = user.Address;
-                userDataInDB.City = user.City;
-                userDataInDB.Country = user.Country;
-                userDataInDB.MobileNo = user.MobileNo;
-                userDataInDB.Subscription = user.Subscription;
-                userDataInDB.ProfilePhoto = user.ProfilePhoto;
-                db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, true);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
-            }
-        }
-
-        [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
-        [HttpGet]
-        public HttpResponseMessage DeleteUser(string id)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(id))
-                {
-                    return Request.CreateResponse(HttpStatusCode.BadRequest);
-                }
-                var userDataInDB = db.Users.Where(x => x.UserId == id).FirstOrDefault();
-                userDataInDB.IsActive = false;
-                db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, true);
-            }
-            catch (Exception e)
-            {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
-            }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && _userManager != null)
-            {
-                _userManager.Dispose();
-                _userManager = null;
-            }
-
-            base.Dispose(disposing);
-        }
+               
         // POST api/Account/ChangePassword
-        [Route("ChangePassword")]
+        [HttpPost]
         public async Task<IHttpActionResult> ChangePassword(ChangePasswordBindingModel model)
         {
             if (!ModelState.IsValid)
@@ -233,6 +75,7 @@ namespace RealEstate.Controllers
 
             return Ok();
         }
+        
         // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
@@ -258,8 +101,8 @@ namespace RealEstate.Controllers
         }
 
         // POST api/Account/Register
+        [HttpPost]
         [AllowAnonymous]
-        [Route("Register")]
         public async Task<IHttpActionResult> Register(RegisterBindingModel model)
         {
             try
@@ -283,12 +126,12 @@ namespace RealEstate.Controllers
 
                 string code = await UserManager.GenerateEmailConfirmationTokenAsync(userDetail.Id);
 
-                var callbackUrl = System.Configuration.ConfigurationManager.AppSettings["AppBaseAddress"] + "Account/ConfirmEmail?userId=" + userDetail.Id + "&code=" + code;
+                //var callbackUrl = System.Configuration.ConfigurationManager.AppSettings["AppBaseAddress"] + "Account/ConfirmEmail?userId=" + userDetail.Id + "&code=" + code;
 
-                await UserManager.SendEmailAsync(user.Id,
-                   "Confirm your account",
-                   "Please confirm your account by clicking: <a href=\""
-                                                   + callbackUrl + "\">link</a>");
+                //await UserManager.SendEmailAsync(user.Id,
+                //   "Confirm your account",
+                //   "Please confirm your account by clicking: <a href=\""
+                //                                   + callbackUrl + "\">link</a>");
 
                 var userData = new User();
                 userData.FirstName = model.FirstName;
@@ -315,8 +158,8 @@ namespace RealEstate.Controllers
             }
         }
 
+        [HttpPost]
         [AllowAnonymous]
-        [Route("ConfirmEmail")]
         public async Task<IHttpActionResult> ConfirmEmail(ConfirmAccountViewModel model)
         {
             if (model.userId == null || model.Code == null)
@@ -333,10 +176,9 @@ namespace RealEstate.Controllers
                 return BadRequest();
         }
 
-
-        // POST api/Account/Register
+        // POST api/Account/Login
+        [HttpPost]
         [AllowAnonymous]
-        [Route("Login")]
         public HttpResponseMessage Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -346,33 +188,31 @@ namespace RealEstate.Controllers
 
 
             var userDetail = UserManager.FindByName(model.UserName);
-            if (userDetail != null && userDetail.EmailConfirmed)
-            {
+            //if (userDetail != null && userDetail.EmailConfirmed)
+            //{
                 if (UserManager.CheckPassword(userDetail, model.Password))
                 {
                     var userInfo = db.Users.Where(x => x.UserId == userDetail.Id).FirstOrDefault();
                     return Request.CreateResponse(HttpStatusCode.OK, userInfo);
                 }
-            }
+            //}
 
 
             return Request.CreateResponse(HttpStatusCode.NotFound, false);
         }
 
-
         [HttpPost]
         [AllowAnonymous]
-        [Route("ForgotPassword")]
         public async Task<IHttpActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
                 // If user has to activate his email to confirm his account, the use code listing below
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    return Ok();
-                }
+                //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                //{
+                //    return Ok();
+                //}
                 if (user == null)
                 {
                     return Ok();
@@ -401,7 +241,6 @@ namespace RealEstate.Controllers
         }
 
         #endregion
-
 
         #region Helpers
 
