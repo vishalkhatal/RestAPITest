@@ -86,6 +86,7 @@ E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\bin\Microsoft.Owin.Securi
 E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\bin\Microsoft.Owin.Security.Twitter.xml
 E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\bin\System.Web.Http.Owin.xml
-E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\obj\Debug\RealEstate.csprojResolveAssemblyReference.cache
+E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\obj\Debug\RealEstate.Migrations.InitialCreate.resources
+E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\obj\Debug\RealEstate.csproj.GenerateResource.Cache
 E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\obj\Debug\RealEstate.dll
 E:\Vishal-Github\RestAPITest\RealEstate.API\RealEstate\obj\Debug\RealEstate.pdb

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using RealEstate.Common;
 using RealEstate.DataAccesss;
 using RealEstate.Models;
 using System;
@@ -73,6 +74,7 @@ namespace RealEstate.Controllers
             }
             catch (Exception e)
             {
+                Logger.AddLog(e.InnerException.Message, "GetAllUsersList method", User.Identity.GetUserId());
                 return BadRequest();
             }
         }
@@ -90,6 +92,7 @@ namespace RealEstate.Controllers
             }
             catch (Exception e)
             {
+                Logger.AddLog(e.InnerException.Message, "GetUserDetail method", User.Identity.GetUserId());
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e);
             }
         }
@@ -117,6 +120,7 @@ namespace RealEstate.Controllers
             }
             catch (Exception e)
             {
+                Logger.AddLog(e.InnerException.Message, "EditUserProfile method", User.Identity.GetUserId());
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e);
             }
         }
@@ -139,6 +143,7 @@ namespace RealEstate.Controllers
             }
             catch (Exception e)
             {
+                Logger.AddLog(e.InnerException.Message, "DeleteUser method", User.Identity.GetUserId());
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e);
             }
         }

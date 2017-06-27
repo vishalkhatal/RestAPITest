@@ -49,6 +49,11 @@ namespace RealEstate.Models
         public byte[] Photo { get; set; }
 
     }
+    public class PropertyActionViewModel
+    {
+        public List<int> propertyIds { get; set; }        
+        public RequestStatus Status { get; set; } 
+    }
 
     public enum PropertyType
     {

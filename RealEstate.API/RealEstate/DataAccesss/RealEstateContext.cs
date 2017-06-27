@@ -39,7 +39,8 @@ namespace RealEstate.DataAccesss
         public DbSet<Message> Messages { get; set; }
         public DbSet<NewsLetter> NewsLetters { get; set; }
         public DbSet<NewsLetterSubscriber> NewsLetterSubscribers { get; set; }
-             #endregion
+        public DbSet<ApplicationLog> ApplicationLogs { get; set; }
+        #endregion
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<RealEstateContext, RealEstate.Migrations.Configuration>());

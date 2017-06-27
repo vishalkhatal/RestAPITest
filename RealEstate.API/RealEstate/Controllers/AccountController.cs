@@ -19,6 +19,8 @@ using RealEstate.Results;
 using RealEstate.DataAccesss;
 using System.Net;
 using System.Linq;
+using RealEstate.Common;
+
 namespace RealEstate.Controllers
 {
     [Authorize]
@@ -85,19 +87,27 @@ namespace RealEstate.Controllers
             {
                 return BadRequest();
             }
-            var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
+            try
             {
-                // Don't reveal that the user does not exist
-                return BadRequest();
-            }
-            var code = model.Code.Replace(" ", "+");
-            var result = await UserManager.ResetPasswordAsync(user.Id, code, model.Password);
-            if (result.Succeeded)
-            {
+                var user = await UserManager.FindByNameAsync(model.Email);
+                if (user == null)
+                {
+                    // Don't reveal that the user does not exist
+                    return BadRequest();
+                }
+                var code = model.Code.Replace(" ", "+");
+                var result = await UserManager.ResetPasswordAsync(user.Id, code, model.Password);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
                 return Ok();
             }
-            return Ok();
+            catch(Exception e)
+            {
+                Logger.AddLog(e.InnerException.Message, "Reset Password method");
+                return BadRequest();
+            }
         }
 
         // POST api/Account/Register
@@ -153,6 +163,7 @@ namespace RealEstate.Controllers
             }
             catch (Exception e)
             {
+                Logger.AddLog(e.InnerException.Message, "Register method");
                 return BadRequest();
 
             }
@@ -166,14 +177,22 @@ namespace RealEstate.Controllers
             {
                 return BadRequest();
             }
-            var code = model.Code.Replace(" ", "+");
-            var result = await UserManager.ConfirmEmailAsync(model.userId, code);
-            if (result.Succeeded)
+            try
             {
-                return Ok();
+                var code = model.Code.Replace(" ", "+");
+                var result = await UserManager.ConfirmEmailAsync(model.userId, code);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                    return BadRequest();
             }
-            else
+            catch(Exception e)
+            {
+                Logger.AddLog(e.InnerException.Message, "ConfirmEmail method");
                 return BadRequest();
+            }
         }
 
         // POST api/Account/Login
@@ -186,19 +205,24 @@ namespace RealEstate.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, false);
             }
 
-
-            var userDetail = UserManager.FindByName(model.UserName);
-            //if (userDetail != null && userDetail.EmailConfirmed)
-            //{
+            try
+            {
+                var userDetail = UserManager.FindByName(model.UserName);
+                //if (userDetail != null && userDetail.EmailConfirmed)
+                //{
                 if (UserManager.CheckPassword(userDetail, model.Password))
                 {
                     var userInfo = db.Users.Where(x => x.UserId == userDetail.Id).FirstOrDefault();
                     return Request.CreateResponse(HttpStatusCode.OK, userInfo);
                 }
-            //}
-
-
-            return Request.CreateResponse(HttpStatusCode.NotFound, false);
+                //}
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+            catch (Exception e)
+            {
+                Logger.AddLog(e.InnerException.Message, "Login method");
+                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            }
         }
 
         [HttpPost]
@@ -232,6 +256,7 @@ namespace RealEstate.Controllers
                 }
                 catch (Exception e)
                 {
+                    Logger.AddLog(e.InnerException.Message, "ForgotPassword method");
                     return BadRequest();
                 }
                 //await UserManager.SendEmailAsync(user.Id, "Reset Password", $"Please reset your password by using this {code}");
